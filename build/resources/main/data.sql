@@ -1,0 +1,120 @@
+-- 사용자 정보
+INSERT INTO USER (USER_ID, USER_NAME, PASSWORD, REGISTRATION_DATE) VALUES
+('user1', '최민준', 'password', '2024-07-29 15:38:00'),
+('user2', '김지수', 'password', '2024-07-29 16:00:00'),
+('user3', '이준호', 'password', '2024-07-29 16:30:00'),
+('user4', '박지민', 'password', '2024-07-29 17:00:00'),
+('user5', '정수빈', 'password', '2024-07-29 17:30:00'),
+('user6', '한유진', 'password', '2024-07-29 18:00:00'),
+('user7', '송지호', 'password', '2024-07-29 18:30:00'),
+('user8', '오예린', 'password', '2024-07-29 19:00:00'),
+('user9', '최서준', 'password', '2024-07-29 19:30:00'),
+('user10', '박수진', 'password', '2024-07-29 20:00:00');
+
+-- 주식 정보
+INSERT INTO STOCK_INFO (CODE, NAME, PRICE, VOLUME, SECTOR, CHANGE_RATE) VALUES
+('5930', '삼성전자', 61500, 100000, '전자', 1.64),
+('005930', 'SK하이닉스', 105000, 200000, '반도체', 2.5),
+('000660', 'LG전자', 95000, 150000, '전자', -1.2),
+('005380', '현대자동차', 210000, 50000, '자동차', 0.75),
+('005490', '포스코', 300000, 30000, '철강', -0.5),
+('000270', '기아', 82000, 60000, '자동차', 1.2),
+('012330', '현대모비스', 320000, 40000, '자동차', 2.1),
+('051910', 'LG화학', 850000, 20000, '화학', -0.8),
+('096770', 'SK이노베이션', 210000, 100000, '화학', 3.0),
+('006400', '삼성SDI', 700000, 50000, '전자', 1.0);
+
+-- 일일 주식 거래 정보
+INSERT INTO STOCK_DAILY_TRADE (TRADE_DATE, STOCK_CODE, PRICE, VOLUME) VALUES
+('2024-07-29', '5930', 61000, 100);
+
+-- 주식 거래 상세 정보
+INSERT INTO STOCK_TRADE_DETAIL (ID, TRADE_DATE, USER_ID, CODE, TRADE_TYPE, TRADE_VOLUME, TRADE_PRICE, TRADE_TIME) VALUES
+(1, CURRENT_DATE(), 'user1', '5930', '매수', 2000, 61500, CURRENT_TIMESTAMP()),
+(2, CURRENT_DATE(), 'user2', '005930', '매도', 1000, 105000, CURRENT_TIMESTAMP()),
+(3, CURRENT_DATE(), 'user3', '000660', '매수', 1500, 95000, CURRENT_TIMESTAMP()),
+(4, CURRENT_DATE(), 'user4', '005380', '매도', 500, 210000, CURRENT_TIMESTAMP()),
+(5, CURRENT_DATE(), 'user5', '005490', '매수', 300, 300000, CURRENT_TIMESTAMP()),
+(6, CURRENT_DATE(), 'user6', '000270', '매수', 600, 82000, CURRENT_TIMESTAMP()),
+(7, CURRENT_DATE(), 'user7', '012330', '매수', 400, 320000, CURRENT_TIMESTAMP()),
+(8, CURRENT_DATE(), 'user8', '051910', '매도', 200, 850000, CURRENT_TIMESTAMP()),
+(9, CURRENT_DATE(), 'user9', '096770', '매수', 1000, 210000, CURRENT_TIMESTAMP()),
+(10, CURRENT_DATE(), 'user10', '006400', '매수', 500, 700000, CURRENT_TIMESTAMP()),
+(11, CURRENT_DATE(), 'user1', '5930', '매수', 2000, 61500, CURRENT_TIMESTAMP());
+
+-- 주식 거래 장부
+INSERT INTO TRANSACTION_LEDGER (STOCK_CODE, TRADE_VOLUME, TRADE_PRICE, USER_ID) VALUES
+('5930', 2000, 61500, 'user1'),
+('005930', 1000, 105000, 'user2'),
+('000660', 1500, 95000, 'user3'),
+('005380', 500, 210000, 'user4'),
+('005490', 300, 300000, 'user5'),
+('000270', 600, 82000, 'user6'),
+('012330', 400, 320000, 'user7'),
+('051910', 200, 850000, 'user8'),
+('096770', 1000, 210000, 'user9'),
+('006400', 500, 700000, 'user10'),
+('5930', 3000, 61000, 'user2'),
+('005930', 2000, 102000, 'user3'),
+('000660', 2500, 96000, 'user4'),
+('005380', 1000, 208000, 'user5'),
+('005490', 600, 302000, 'user6'),
+('000270', 1200, 81000, 'user7'),
+('012330', 800, 315000, 'user8'),
+('051910', 400, 855000, 'user9'),
+('096770', 2000, 205000, 'user10'),
+('006400', 1000, 690000, 'user1'),
+('5930', 4000, 62000, 'user3'),
+('005930', 3000, 106000, 'user4'),
+('000660', 3500, 97000, 'user5'),
+('005380', 1500, 212000, 'user6'),
+('005490', 900, 304000, 'user7'),
+('000270', 1800, 82500, 'user8'),
+('012330', 1200, 310000, 'user9'),
+('051910', 600, 860000, 'user10'),
+('096770', 3000, 215000, 'user1'),
+('006400', 1500, 680000, 'user2'),
+('5930', 5000, 60500, 'user4'),
+('005930', 4000, 104000, 'user5'),
+('000660', 4500, 95000, 'user6'),
+('005380', 2000, 210000, 'user7'),
+('005490', 1200, 300000, 'user8'),
+('000270', 2400, 82000, 'user9'),
+('012330', 1600, 320000, 'user10'),
+('051910', 800, 850000, 'user1'),
+('096770', 4000, 210000, 'user2'),
+('006400', 2000, 700000, 'user3');
+
+-- 주식 조회 히스토리 (최근 1시간 조회수 기준)
+INSERT INTO STOCK_VIEW_LOG (LOG_ID, STOCK_CODE, VIEW_TIME, USER_ID) VALUES
+(1, '5930', DATEADD('HOUR', -4, NOW()), 'user1'),
+(2, '005930', DATEADD('MINUTE', -210, NOW()), 'user2'),
+(3, '000660', DATEADD('HOUR', -3, NOW()), 'user3'),
+(4, '005380', DATEADD('MINUTE', -150, NOW()), 'user1'),
+(5, '005490', DATEADD('HOUR', -2, NOW()), 'user2'),
+(6, '000270', DATEADD('MINUTE', -90, NOW()), 'user3'),
+(7, '012330', DATEADD('HOUR', -1, NOW()), 'user4'),
+(8, '051910', DATEADD('MINUTE', -30, NOW()), 'user5'),
+(9, '096770', DATEADD('MINUTE', -15, NOW()), 'user6'),
+(10, '006400', DATEADD('MINUTE', -6, NOW()), 'user7'),
+(11, '5930', DATEADD('MINUTE', -6, NOW()), 'user1'),
+(12, '005930', DATEADD('MINUTE', -12, NOW()), 'user2'),
+(13, '000660', DATEADD('MINUTE', -18, NOW()), 'user3'),
+(14, '005380', DATEADD('MINUTE', -24, NOW()), 'user1'),
+(15, '005490', DATEADD('MINUTE', -30, NOW()), 'user2'),
+(16, '000270', DATEADD('MINUTE', -36, NOW()), 'user3'),
+(17, '012330', DATEADD('MINUTE', -42, NOW()), 'user4'),
+(18, '051910', DATEADD('MINUTE', -48, NOW()), 'user5'),
+(19, '096770', DATEADD('MINUTE', -54, NOW()), 'user6'),
+(20, '006400', DATEADD('MINUTE', -66, NOW()), 'user7'),
+(21, '5930', DATEADD('MINUTE', -72, NOW()), 'user1'),
+(22, '005930', DATEADD('MINUTE', -78, NOW()), 'user2'),
+(23, '000660', DATEADD('MINUTE', -84, NOW()), 'user3'),
+(24, '005380', DATEADD('MINUTE', -90, NOW()), 'user1'),
+(25, '005490', DATEADD('MINUTE', -96, NOW()), 'user2'),
+(26, '000270', DATEADD('MINUTE', -102, NOW()), 'user3'),
+(27, '012330', DATEADD('MINUTE', -108, NOW()), 'user4'),
+(28, '051910', DATEADD('MINUTE', -114, NOW()), 'user5'),
+(29, '096770', DATEADD('MINUTE', -120, NOW()), 'user6'),
+(30, '006400', DATEADD('MINUTE', -126, NOW()), 'user7'),
+(31,'006400', DATEADD('MINUTE', -306, NOW()), 'user7');
