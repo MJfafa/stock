@@ -2,60 +2,44 @@ package com.kakaopay.dto;
 
 import java.math.BigDecimal;
 
-/**
- * 주식 정보 DTO 클래스
- */
 public class StockInfoDTO {
-
-    private Long id;
-    private String code;
-    private String name;
-    private BigDecimal price;
+    private String stockCode;
+    private Double price;         // 현재가
+    private Double closePrice;    // 전일 종가
     private Long volume;
-    private String sector;
-    private double changeRate;
+    private Double priceIncreaseRate; // 가격 상승률
 
-    public StockInfoDTO(Long id, String code, String name, BigDecimal price, Long volume, String sector, double changeRate) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
+    public StockInfoDTO(String stockCode, Double price, Double closePrice, Long volume, Double priceIncreaseRate) {
+        this.stockCode = stockCode;
         this.price = price;
+        this.closePrice = closePrice;
         this.volume = volume;
-        this.sector = sector;
-        this.changeRate = changeRate;
+        this.priceIncreaseRate = priceIncreaseRate;
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    // getters and setters
+    public String getStockCode() {
+        return stockCode;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setStockCode(String stockCode) {
+        this.stockCode = stockCode;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Double getClosePrice() {
+        return closePrice;
+    }
+
+    public void setClosePrice(Double closePrice) {
+        this.closePrice = closePrice;
     }
 
     public Long getVolume() {
@@ -66,19 +50,11 @@ public class StockInfoDTO {
         this.volume = volume;
     }
 
-    public String getSector() {
-        return sector;
+    public Double getPriceIncreaseRate() {
+        return priceIncreaseRate;
     }
 
-    public void setSector(String sector) {
-        this.sector = sector;
-    }
-
-    public double getChangeRate() {
-        return changeRate;
-    }
-
-    public void setChangeRate(double changeRate) {
-        this.changeRate = changeRate;
+    public void setPriceIncreaseRate(Double priceIncreaseRate) {
+        this.priceIncreaseRate = priceIncreaseRate;
     }
 }

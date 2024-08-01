@@ -12,9 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * 주식 서비스 클래스.
@@ -43,8 +45,8 @@ public class StockService {
     public StockInfoDTO getStockInfoByCode(String code) {
         logger.info("Fetching stock information for code: {}", code);
         return stockInfoRepository.findByCode(code)
-                .map(stock -> new StockInfoDTO(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice(),
-                        stock.getVolume(), stock.getSector(), stock.getChangeRate()))
+                .map(stock -> new StockInfoDTO(stock.getCode(), stock.getPrice().doubleValue(), stock.getChangeRate(), 
+                    stock.getVolume().longValue(), stock.getChangeRate()))
                 .orElseThrow(() -> new RuntimeException("Stock not found with code: " + code));
     }
 
@@ -71,20 +73,12 @@ public class StockService {
         logger.info("Fetching stocks with highest volume");
         return stockInfoRepository.findTopByOrderByVolumeDesc().stream()
                 .map(result -> new StockInfoDTO(
-                        null, // id를 사용하지 않을 경우 null로 전달
                         (String) result[0], // code
-                        null, // name을 사용하지 않을 경우 null로 전달
                         null, // price를 사용하지 않을 경우 null로 전달
+                        0.0, // changeRate를 사용하지 않을 경우 기본값 전달
                         ((BigDecimal) result[1]).longValue(), // volume을 BigDecimal에서 long으로 변환
-                        null, // sector를 사용하지 않을 경우 null로 전달
-                        0.0)) // changeRate를 사용하지 않을 경우 기본값 전달
+                        0.0)) // priceIncreaeRate 기본값 전달
                 .collect(Collectors.toList());
-        
-        /*return stockInfoRepository.findTopByOrderByVolumeDesc().stream()
-                .map(stock -> new StockInfoDTO(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice(),
-                        stock.getVolume(), stock.getSector(), stock.getChangeRate()))
-                .collect(Collectors.toList());
-                */
     }
 
     /**
@@ -98,7 +92,7 @@ public class StockService {
         logger.info("Fetching most popular stocks with page: {}, size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         List<Object[]> results = stockViewLogRepository.findTopByViewTimeAfterOrderByViewCountDesc(pageable);
-        
+
         logger.info("Query returned {} results.", results.size());
         return results.stream()
                 .map(viewLog -> new StockViewCountDTO((String) viewLog[0], ((Number) viewLog[1]).intValue()))
@@ -113,11 +107,23 @@ public class StockService {
     public List<StockInfoDTO> getTopRisingStocks() {
         logger.info("Fetching top rising stocks");
         return stockInfoRepository.findTopByOrderByChangeRateDesc().stream()
-                .map(stock -> new StockInfoDTO(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice(),
-                        stock.getVolume(), stock.getSector(), stock.getChangeRate()))
+                .map(result -> {
+                    String stockCode = (String) result[1];
+                    Double price = (Double) result[2];
+                    Double closePrice = (Double) result[3];
+                    BigInteger volume = (BigInteger) result[4];
+                    Double priceIncreaseRate = (Double) result[5];
+
+                    return new StockInfoDTO(
+                            stockCode,                 // stock code
+                            price,                     // current price
+                            priceIncreaseRate,          // price increase rate
+                            volume.longValue(),         // volume
+                            null                        // sector, not used here
+                    );
+                })
                 .collect(Collectors.toList());
     }
-
     /**
      * 하락률이 가장 높은 주식 목록을 조회합니다.
      * 
@@ -126,8 +132,21 @@ public class StockService {
     public List<StockInfoDTO> getTopFallingStocks() {
         logger.info("Fetching top falling stocks");
         return stockInfoRepository.findTopByOrderByChangeRateAsc().stream()
-                .map(stock -> new StockInfoDTO(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice(),
-                        stock.getVolume(), stock.getSector(), stock.getChangeRate()))
+                .map(result -> {
+                    String stockCode = (String) result[1];
+                    Double price = (Double) result[2];
+                    Double closePrice = (Double) result[3];
+                    BigInteger volume = (BigInteger) result[4];
+                    Double priceIncreaseRate = (Double) result[5];
+
+                    return new StockInfoDTO(
+                            stockCode,                 // stock code
+                            price,                     // current price
+                            priceIncreaseRate,          // price increase rate
+                            volume.longValue(),         // volume
+                            null                        // sector, not used here
+                    );
+                })
                 .collect(Collectors.toList());
     }
 }

@@ -45,8 +45,23 @@ public interface StockInfoRepository extends JpaRepository<StockInfo, Long> {
      *
      * @return a list of stocks ordered by gain percentage
      */
-    @Query(value = "SELECT * FROM STOCK_INFO ORDER BY CHANGE_RATE DESC", nativeQuery = true)
-    List<StockInfo> findTopByOrderByChangeRateDesc();
+    @Query(value = "SELECT " +
+            "A.TRADE_DATE, " +   // 현재일
+            "A.STOCK_CODE, " +
+            "A.PRICE, " +         // 현재가
+            "B.CLOSE_PRICE, " +   // 전일 종가
+            "A.VOLUME, " +
+            "((A.PRICE - B.CLOSE_PRICE) / B.CLOSE_PRICE) * 100 AS PRICE_INCREASE_RATE " +
+            "FROM STOCK_DAILY_TRADE A " +
+            "JOIN STOCK_DAILY_TRADE B " +
+            "ON A.STOCK_CODE = B.STOCK_CODE " +
+            "AND A.TRADE_DATE = B.TRADE_DATE + INTERVAL '1' DAY " +
+            "WHERE A.TRADE_DATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD') " +
+            "AND A.PRICE >= B.CLOSE_PRICE " +
+            "ORDER BY PRICE_INCREASE_RATE DESC", 
+    nativeQuery = true)
+    List<Object[]> findTopByOrderByChangeRateDesc();
+ 
 
     /**
      * Finds the top stocks by loss percentage.
@@ -55,8 +70,22 @@ public interface StockInfoRepository extends JpaRepository<StockInfo, Long> {
      *
      * @return a list of stocks ordered by loss percentage
      */
-    @Query(value = "SELECT * FROM STOCK_INFO ORDER BY CHANGE_RATE ASC", nativeQuery = true)
-    List<StockInfo> findTopByOrderByChangeRateAsc();
+    @Query(value = "SELECT " +
+            "A.TRADE_DATE, " +   // 현재일
+            "A.STOCK_CODE, " +
+            "A.PRICE, " +         // 현재가
+            "B.CLOSE_PRICE, " +   // 전일 종가
+            "A.VOLUME, " +
+            "((A.PRICE - B.CLOSE_PRICE) / B.CLOSE_PRICE) * 100 AS PRICE_INCREASE_RATE " +
+            "FROM STOCK_DAILY_TRADE A " +
+            "JOIN STOCK_DAILY_TRADE B " +
+            "ON A.STOCK_CODE = B.STOCK_CODE " +
+            "AND A.TRADE_DATE = B.TRADE_DATE + INTERVAL '1' DAY " +
+            "WHERE A.TRADE_DATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD') " +
+            "AND A.PRICE <= B.CLOSE_PRICE " +
+            "ORDER BY PRICE_INCREASE_RATE ", 
+    nativeQuery = true)
+    List<Object[]> findTopByOrderByChangeRateAsc();
 
     /**
      * Finds stocks by their codes.
